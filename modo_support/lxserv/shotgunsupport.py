@@ -1,9 +1,12 @@
-from __future__ import print_function
-import sys
-import os
+#   Copyright (c) 2001-2014, The Foundry Visionmongers Ltd.
+#   All Rights Reserved. Patents granted and pending.
+#
 
+##
 ## W:\WG\Shotgun_Configs\RTS_Master_develop\tank.bat --debug  Task @28197 launch_modo
 
+import sys
+import os
 
 #_logfile = open(r"C:\temp\modoengine.txt", "a")
 
@@ -17,14 +20,19 @@ def log(msg,type="INFO"):
     except:
         pass
 
+for path in os.environ.get('MODO_PATH','').split(os.pathsep):
+    if path not in sys.path:
+        sys.path.append(path)
+        log("appended path '{0}' to sys.path".format(path))
+            
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
-PYSIDE_PATH = os.path.realpath(os.path.join(CURRENT_PATH, "..", "..", "modules"))
-STARTUP_PATH = r"W:\RTS\People\Lpaelike\dev\tk-multi-launchapp\app_specific\modo\startup"
-sys.path.append(os.path.realpath(STARTUP_PATH))
-#import rpdb2;rpdb2.start_embedded_debugger("12345")
-if PYSIDE_PATH not in sys.path:
-    sys.path.append(PYSIDE_PATH)
+EXTRA_MODULES_PATH = os.path.realpath(os.path.join(CURRENT_PATH, "..", "..", "modules"))
+
+if EXTRA_MODULES_PATH not in sys.path:
+    log("Adding EXTRA MODULES PATH")
+    sys.path.append(EXTRA_MODULES_PATH)
+    import distutils.version
 
 try:
     import lx
@@ -39,23 +47,32 @@ except ImportError:
     MODO_AVAILABLE = False
     log("MODO import fail")
 
-try:
-    modo_path = os.environ.get("MODO_PATH", "")
-    separator = ":"
-    if sys.platform == "win32":
-        separator = ";"
-    for p in modo_path.split(separator):
-        if p not in sys.path:
-            sys.path.append(p)
-            log("appended path '{0}'".format(p))
-except:
-    if MODO_AVAILABLE:
-        lx.out("Error adding MODO_PATH")
-    else:
-        print("Error adding MODO_PATH")
-
 
 from PySide import QtGui, QtCore
+
+class ModoApplication(QtGui.QApplication):
+    def __init__(self,  *args):
+        super(ModoApplication, self).__init__(  *args)
+
+    def notify(self, receiver, event):
+        if  event.type() == QtCore.QEvent.Type.KeyPress:
+            if event.key() < 1000:
+                # only handle printable characters
+                is_shift_pressed = self.keyboardModifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier
+
+                text = QtGui.QKeySequence(event.key()).toString()
+                text = text.upper() if is_shift_pressed else text.lower()
+                
+                # QKeyEvent.text() does not work properly here
+                # copy the event data and use the altered text
+                mod_event  = QtGui.QKeyEvent.createExtendedKeyEvent(event.type(), event.key(), event.modifiers(),
+                                                                    event.nativeScanCode(), event.nativeVirtualKey(),
+                                                                    event.nativeModifiers(), text=text )
+                # handle modified event
+                return super(ModoApplication, self).notify(receiver, mod_event)
+
+
+        return super(ModoApplication, self).notify(receiver, event)    
 
 SHOTGUN_LOCALS = {}
 
@@ -524,7 +541,7 @@ if MODO_AVAILABLE:
     event_listener.register()
 
     if no_embedded_qt_mode():
-        app = QtGui.QApplication([])
+        app = ModoApplication([])
         _shotgun_panel = ShotgunWidget()
         _shotgun_panel.show()
         _shotgun_panel.raise_()
@@ -536,7 +553,7 @@ if MODO_AVAILABLE:
 
 def test():
     global _modo_app
-    _modo_app = QtGui.QApplication(sys.argv)
+    _modo_app = ModoApplication(sys.argv)
     w = ShotgunWidget()
     w.show()
     _modo_app.exec_()
