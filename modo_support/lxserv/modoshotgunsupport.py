@@ -118,10 +118,17 @@ def get_meshes():
     scene = lxtd.scene.current_scene()
     return  scene.meshes
 
+def get_scene_range():
+        scene = lxtd.scene.current_scene()
+        return scene.scene_range
 
 def close_all_scenes():
     lx.eval("scene.closeAll")
 
+def validate_item_for_alembic_cache_publish(item):
+    # needs to be implemented later,
+    # return no errors for now
+    return []
 
 def get_root_widget():
     return _shotgun_parent
