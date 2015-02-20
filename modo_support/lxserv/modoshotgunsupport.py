@@ -51,6 +51,11 @@ except ImportError:
 from PySide import QtGui, QtCore
 
 class ModoApplication(QtGui.QApplication):
+    """
+    Because Modo 801 on Windows does not directly support Qt and
+    key events are always upper case, we need to do some
+    event filtering to have proper text input.
+    """
     def __init__(self,  *args):
         super(ModoApplication, self).__init__(  *args)
 
@@ -130,6 +135,10 @@ def validate_item_for_alembic_cache_publish(item):
     # return no errors for now
     return []
 
+def export_alembic(**kwds):
+    # needs to be implemented later
+    pass
+
 def get_root_widget():
     return _shotgun_parent
 
@@ -139,7 +148,9 @@ def get_shotgun_widget():
 
 
 def get_references():
-
+    """
+    get  a list of referenced scene files
+    """
     scene_svc = lx.service.Scene()
     scene = lxu.select.SceneSelection().current()
      
