@@ -15,13 +15,13 @@ From your local shotgun environment install the engine with the tank command:
 tank install_engine project https://github.com/tremolo/tk-modo.git
 ```
 
-Copy the contents of the install/engines/git/tk-modo.git/v0.1.4/modo_support folder into your Modo User Scripts folder (for version 0.1.4)
+Copy the contents of the install/engines/git/tk-modo.git/TK_MODO_VERSION/modo_support folder into your Modo User Scripts folder (for version 0.1.4):
 ```
 cp -a install/engines/git/tk-modo.git/v0.1.4/modo_support/lxserv $HOME/.luxology/Scripts
 ```
 
 ### check that the configuration for tk-modo in env/project.yml is present
-
+```
   tk-modo:
     apps:
       tk-multi-about: '@about'
@@ -57,7 +57,7 @@ cp -a install/engines/git/tk-modo.git/v0.1.4/modo_support/lxserv $HOME/.luxology
     - {app_instance: tk-multi-workfiles, name: Shotgun File Manager...}
     template_project: null
     use_sgtk_as_menu_name: false
-
+```
 
 ### Make sure you have defined the path to modo in your env/includes/app_launchers.yml config file
 
@@ -88,4 +88,14 @@ launch_modo:
 modo_windows: C:\Program Files\Luxology\modo\801_sp3\modo.exe
 modo_linux: modo
 modo_mac: /Applications/Modo.app
+```
+
+
+### Make sure the tk-multi-launchmodo command is defined  in every environment you are using for the tk-multi-launchapp 
+```
+tk-shell:
+apps: {tk-multi-launch3dsmax: '@launch_3dsmax', tk-multi-launchhiero: '@launch_hiero', tk-multi-launchmodo: '@launch_modo',
+  tk-multi-launchmaya: '@launch_maya', tk-multi-launchnuke: '@launch_nuke', tk-shotgun-launchphotoshop: '@launch_photoshop'}
+debug_logging: false
+location: {name: tk-shell, type: app_store, version: v0.4.1}
 ```
