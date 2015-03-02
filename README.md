@@ -49,7 +49,7 @@ cp -a install/engines/git/tk-modo.git/v0.1.4/modo_support/lxserv $HOME/.luxology
         secondary_outputs: []
         template_work: modo_project_work
       tk-multi-screeningroom: '@launch_screeningroom'
-      tk-multi-workfiles: '@workfiles-launch-at-startup'
+      tk-multi-workfiles: '@workfiles-launch-at-startup'tung
     compatibility_dialog_min_version: 801
     debug_logging: false
     location: {path: 'https://github.com/tremolo/tk-modo.git', type: git, version: v0.1.4}
@@ -99,3 +99,20 @@ apps: {tk-multi-launch3dsmax: '@launch_3dsmax', tk-multi-launchhiero: '@launch_h
 debug_logging: false
 location: {name: tk-shell, type: app_store, version: v0.4.1}
 ```
+
+
+## Start Modo
+
+You you should now be able to lauch Modo from Shotgun
+
+```
+tank launch_modo
+```
+
+For Modo without Qt support a floating window should open with Shotgun Logo,
+use the menu in that window to open the Shotgun File Manager
+
+For Modo with Qt support (on Linux and Modo 901) you can add the Shotgun panel into Modo by selecting the panel type "Application>Custom View>Shotgun",
+use also the menu provided in the panel to open the Shotgun File Manage
+
+* It may be necessary to select "Reload Shotgun" in the "Shotgun" menu of the panel to load the engine*
