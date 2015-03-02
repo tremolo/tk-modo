@@ -15,10 +15,6 @@ It sets up the tank context and prepares the Tank Modo engine.
 
 
 import os
-import lx
-
-def log_msg(msg):
-    lx.out(msg)
 
 
 def bootstrap(engine_name, context, app_path, app_args):
@@ -26,9 +22,9 @@ def bootstrap(engine_name, context, app_path, app_args):
     # get the PYTHONPATH and store in MODO_PATH, Modo seems to clear PYTHONPATH
     # we use MODO_PATH later in module shotgunsupport
     os.environ["MODO_PATH"] = os.environ.get("PYTHONPATH", "")
-    #startup_path = os.path.abspath(os.path.join(self._get_app_specific_path("modo"), "startup"))
-    startup_path = os.path.dirname(__file__)
-    tank.util.append_path_to_env_var("MODO_PATH", startup_path)
+    resource_path = os.path.abspath(os.path.join(self._get_app_specific_path("modo"), "resources"))
+    #startup_path = os.path.dirname(__file__)
+    tank.util.append_path_to_env_var("MODO_PATH", resource_path)
 
     return app_path, app_args
 

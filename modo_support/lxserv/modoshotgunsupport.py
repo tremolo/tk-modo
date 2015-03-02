@@ -421,10 +421,10 @@ class ShotgunWidget(QtGui.QWidget):
         log("reloading shotgun")
         try:
             #import rpdb2;rpdb2.start_embedded_debugger("12345")
-            import init_tank
-            reload(init_tank)
+            #import init_tank
+            #reload(init_tank)
             
-            init_tank.bootstrap_tank()
+            #init_tank.bootstrap_tank()
 
             import sgtk
             engine = sgtk.platform.current_engine()
