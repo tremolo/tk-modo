@@ -91,7 +91,7 @@ modo_mac: /Applications/Modo.app
 ```
 
 
-### Make sure the tk-multi-launchmodo command is defined  in every environment you are using for the tk-multi-launchapp 
+### Make sure the tk-multi-launchmodo command is defined  in every environment you are using for the tk-multi-launchapp  (env/project.yml and others)
 ```
 tk-shell:
 apps: {tk-multi-launch3dsmax: '@launch_3dsmax', tk-multi-launchhiero: '@launch_hiero', tk-multi-launchmodo: '@launch_modo',
