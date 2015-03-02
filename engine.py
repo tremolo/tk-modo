@@ -22,7 +22,7 @@ import textwrap
 import os
 
 import lx
-import shotgunsupport
+import modoshotgunsupport
 
 CONSOLE_OUTPUT_WIDTH = 200
 
@@ -30,17 +30,8 @@ CONSOLE_OUTPUT_WIDTH = 200
 # methods to support the state when the engine cannot start up
 # for example if a non-tank file is loaded in Modo
 
-modo_log = open("c:/temp/modo_engine_log.txt", "a")
-
 def log_msg(msg, type="INFO"):
-    try:
-        modo_log.write("{}:{}\n".format(type,msg))
-        #for line in textwrap.wrap(msg, width=CONSOLE_OUTPUT_WIDTH):
-        #    lx.out(line)
-    except:
-        pass
-        
-    #print msg
+    print "{}: {}".format(type,msg)
 
 class SceneEventWatcher(object):
     """
@@ -132,7 +123,7 @@ def refresh_engine(engine_name, prev_context, menu_name):
         tk = tank.tank_from_path(new_path)
     except tank.TankError, e:
         # render menu
-        shotgunsupport.add_disabled_menu()
+        modoshotgunsupport.add_disabled_menu()
         
         # (AD) - this leaves the engine running - is this correct?        
         return current_engine
@@ -158,7 +149,7 @@ def refresh_engine(engine_name, prev_context, menu_name):
         log_msg("Shotgun: Engine cannot be started: %s" % e)
         
         # render menu
-        shotgunsupport.add_disabled_menu()
+        modoshotgunsupport.add_disabled_menu()
 
         return None
     else:
@@ -274,7 +265,7 @@ class ModoEngine(tank.platform.Engine):
 
     def _removeMenu(self):
         # TODO: remove menu. cleanup
-        w = shotgunsupport.get_shotgun_widget()
+        w = modoshotgunsupport.get_shotgun_widget()
         w.create_menu()
 
         return
@@ -334,9 +325,9 @@ class ModoEngine(tank.platform.Engine):
         Get the QWidget parent for all dialogs created through
         show_dialog & show_modal.
         """
-        import shotgunsupport
+        import modoshotgunsupport
         # this is valid as soon as the Qt interface is loaded
-        return shotgunsupport.get_root_widget()
+        return modoshotgunsupport.get_root_widget()
         
     @property
     def has_ui(self):

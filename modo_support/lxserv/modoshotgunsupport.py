@@ -8,7 +8,8 @@
 import sys
 import os
 
-#_logfile = open(r"C:\temp\modoengine.txt", "a")
+
+
 
 def log(msg,type="INFO"):
     try:
@@ -46,6 +47,39 @@ except ImportError:
     import traceback;traceback.print_exc()
     MODO_AVAILABLE = False
     log("MODO import fail")
+
+
+
+
+def bootstrap_tank():
+    import tank
+    if not "TANK_ENGINE" in os.environ:
+        log_msg("Shotgun: Missing required environment variable TANK_ENGINE.")
+        return
+    
+    engine_name = os.environ.get("TANK_ENGINE") 
+    try:
+        context = tank.context.deserialize(os.environ.get("TANK_CONTEXT"))
+    except Exception, e:
+        log("Shotgun: Could not create context! Shotgun Pipeline Toolkit will be disabled. Details: %s" % e, type="ERROR")
+        return
+        
+    try:    
+        engine = tank.platform.start_engine(engine_name, context.tank, context)
+    except Exception, e:
+        log("Shotgun: Could not start engine: %s" % e, type="ERROR")
+        return
+    
+    file_to_open = os.environ.get("TANK_FILE_TO_OPEN")
+    if file_to_open:
+        # finally open the file
+        load_file(file_to_open)
+    
+
+    # clean up temp env vars
+    for var in ["TANK_ENGINE", "TANK_CONTEXT", "TANK_FILE_TO_OPEN"]:
+        if var in os.environ:
+            del os.environ[var]
 
 
 from PySide import QtGui, QtCore
@@ -433,7 +467,11 @@ class ShotgunWidget(QtGui.QWidget):
                 self.create_menu()
                 engine.populate_shotgun_menu(self.menu)
             else:
-                self.add_disabled_menu()
+                try:
+                    bootstrap_tank()
+                except:
+                    import traceback;traceback.print_exc()
+                    self.add_disabled_menu()
         except:
             import traceback
             traceback.print_exc()

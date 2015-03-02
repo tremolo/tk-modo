@@ -20,13 +20,12 @@ import unicodedata
 
 from tank.platform.qt import QtGui, QtCore
 from tank.platform import restart
-import shotgunsupport
+import modoshotgunsupport
 
-import lx
+
 
 def menu_callback(cb):
-    lx.out("menu item called")
-    print("menu item called")
+    modoshotgunsupport.log("menu item called",type="DEBUG")
     cb()
 
 class MenuGenerator(object):
@@ -49,7 +48,7 @@ class MenuGenerator(object):
         """
         #import rpdb2;rpdb2.start_embedded_debugger("1234")
 
-        base_widget = shotgunsupport.get_shotgun_widget()
+        base_widget = modoshotgunsupport.get_shotgun_widget()
         self._menu_handle = menu = base_widget.get_menu()
         #menu.clear()
         
